@@ -1,0 +1,158 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.28 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show database
+    -> ^C
+mysql> show database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'database' at line 1
+mysql> create database payroll_service;
+ERROR 1007 (HY000): Can't create database 'payroll_service'; database exists
+mysql> show databases
+    -> ^C
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| database           |
+| information_schema |
+| mysql              |
+| payroll_service    |
+| performance_schema |
+| students           |
+| sys                |
++--------------------+
+7 rows in set (0.08 sec)
+
+mysql> use payroll_service;
+Database changed
+mysql> create table emp_payroll(id int primary key auto_increment,name varchar(20),salary int,start_date date);
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> insert into emp_payroll(name,salary,start_date) values('nilesh',100000,'1990-01-90');
+ERROR 1292 (22007): Incorrect date value: '1990-01-90' for column 'start_date' at row 1
+mysql> insert into emp_payroll(name,salary,start_date) values('nilesh',100000,'1990-90-01');
+ERROR 1292 (22007): Incorrect date value: '1990-90-01' for column 'start_date' at row 1
+mysql> insert into emp_payroll(name,salary,start_date) values('nilesh',10000,'1990-90-01');
+ERROR 1292 (22007): Incorrect date value: '1990-90-01' for column 'start_date' at row 1
+mysql> insert into emp_payroll(name,salary,start_date) values('nilesh',10000,'1990-10-01');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into emp_payroll(name,salary,start_date) values('nitesh',11000,'1990-10-10');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp_payroll(name,salary,start_date) values('raj',11000,'1990-11-01');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp_payroll(name,salary,start_date) values('piya',6000,'1990-08-20');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp_payroll;
++----+--------+--------+------------+
+| id | name   | salary | start_date |
++----+--------+--------+------------+
+|  1 | nilesh |  10000 | 1990-10-01 |
+|  2 | nitesh |  11000 | 1990-10-10 |
+|  3 | raj    |  11000 | 1990-11-01 |
+|  4 | piya   |   6000 | 1990-08-20 |
++----+--------+--------+------------+
+4 rows in set (0.00 sec)
+
+mysql> select salary from emp_payroll where name='nitesh';
++--------+
+| salary |
++--------+
+|  11000 |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select * from emp_payroll where start_date between cast('1990-10-01' as date) and date(now());
++----+--------+--------+------------+
+| id | name   | salary | start_date |
++----+--------+--------+------------+
+|  1 | nilesh |  10000 | 1990-10-01 |
+|  2 | nitesh |  11000 | 1990-10-10 |
+|  3 | raj    |  11000 | 1990-11-01 |
++----+--------+--------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select sum(salary) from emp_payroll;
++-------------+
+| sum(salary) |
++-------------+
+|       38000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(salary) from emp_payroll;
++-------------+
+| avg(salary) |
++-------------+
+|   9500.0000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select min(salary) from emp_payroll;
++-------------+
+| min(salary) |
++-------------+
+|        6000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> select max(salary) from emp_payroll;
++-------------+
+| max(salary) |
++-------------+
+|       11000 |
++-------------+
+1 row in set (0.00 sec)
+
+mysql> alter table emp_payroll add column phoneno varchar(12),add column address varchar(50) default ('ahmednagar'),add column dept varchar(30) not null;
+Query OK, 4 rows affected (0.11 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> alter table emp_payroll add column basic_pay int, add column deductions int, add column taxable_pay int, add column income_tax int, add column net_pay int;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc emp_payroll;
++-------------+-------------+------+-----+------------------------+-------------------+
+| Field       | Type        | Null | Key | Default                | Extra             |
++-------------+-------------+------+-----+------------------------+-------------------+
+| id          | int         | NO   | PRI | NULL                   | auto_increment    |
+| name        | varchar(20) | YES  |     | NULL                   |                   |
+| salary      | int         | YES  |     | NULL                   |                   |
+| start_date  | date        | YES  |     | NULL                   |                   |
+| phoneno     | varchar(12) | YES  |     | NULL                   |                   |
+| address     | varchar(50) | YES  |     | _utf8mb4\'ahmednagar\' | DEFAULT_GENERATED |
+| dept        | varchar(30) | NO   |     | NULL                   |                   |
+| basic_pay   | int         | YES  |     | NULL                   |                   |
+| deductions  | int         | YES  |     | NULL                   |                   |
+| taxable_pay | int         | YES  |     | NULL                   |                   |
+| income_tax  | int         | YES  |     | NULL                   |                   |
+| net_pay     | int         | YES  |     | NULL                   |                   |
++-------------+-------------+------+-----+------------------------+-------------------+
+12 rows in set (0.02 sec)
+
+mysql> select * from emp_payroll;
++----+--------+--------+------------+---------+------------+------+-----------+------------+-------------+------------+---------+
+| id | name   | salary | start_date | phoneno | address    | dept | basic_pay | deductions | taxable_pay | income_tax | net_pay |
++----+--------+--------+------------+---------+------------+------+-----------+------------+-------------+------------+---------+
+|  1 | nilesh |  10000 | 1990-10-01 | NULL    | ahmednagar |      |      NULL |       NULL |        NULL |       NULL |    NULL |
+|  2 | nitesh |  11000 | 1990-10-10 | NULL    | ahmednagar |      |      NULL |       NULL |        NULL |       NULL |    NULL |
+|  3 | raj    |  11000 | 1990-11-01 | NULL    | ahmednagar |      |      NULL |       NULL |        NULL |       NULL |    NULL |
+|  4 | piya   |   6000 | 1990-08-20 | NULL    | ahmednagar |      |      NULL |       NULL |        NULL |       NULL |    NULL |
++----+--------+--------+------------+---------+------------+------+-----------+------------+-------------+------------+---------+
+4 rows in set (0.00 sec)
+
+mysql>
